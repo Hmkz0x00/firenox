@@ -210,7 +210,13 @@ export function ProductBottle() {
   return (
     <div className="product-bottle" data-ready={ready} data-mode="3d">
       <div className="product-turntable__stage product-bottle__stage" ref={stageRef}>
-        {(!ready || failed) && <div className="product-turntable__poster" role="img" aria-label="FIRENOX fire spray bottle" />}
+        {!ready && !failed && (
+          <div className="product-bottle__loading" role="status">
+            <span className="product-bottle__spinner" aria-hidden="true" />
+            <span>Loading 3D bottle</span>
+          </div>
+        )}
+        {failed && <p className="product-bottle__loading" role="status">3D product view unavailable</p>}
       </div>
     </div>
   )

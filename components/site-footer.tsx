@@ -12,6 +12,8 @@ export function SiteFooter() {
               alt="FIRENOX fire mark"
               width={36}
               height={36}
+              loading="eager"
+              fetchPriority="low"
               className="size-full object-cover"
             />
           </span>

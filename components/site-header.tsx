@@ -48,7 +48,7 @@ export function SiteHeader() {
               width={36}
               height={36}
               className="size-full object-cover"
-              priority
+              preload
             />
           </span>
           <span className="leading-none">

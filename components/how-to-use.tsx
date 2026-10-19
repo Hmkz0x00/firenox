@@ -1,30 +1,34 @@
 import Image from 'next/image'
 import { ArrowUpRight, ShieldAlert } from 'lucide-react'
 import { Reveal } from '@/components/reveal'
+import pullImage from '@/public/how-to-use/pull.webp'
+import aimImage from '@/public/how-to-use/aim.webp'
+import pressImage from '@/public/how-to-use/press.webp'
+import sweepImage from '@/public/how-to-use/sweep.webp'
 
 const STEPS = [
   {
     title: 'Pull',
     copy: 'Remove the safety pin.',
-    image: '/how-to-use/pull.webp',
+    image: pullImage,
     alt: 'Close-up of a hand lifting the yellow safety pin from the FIRENOX spray head',
   },
   {
     title: 'Aim',
     copy: 'Point the nozzle at the base of the fire from a safe distance.',
-    image: '/how-to-use/aim.webp',
+    image: aimImage,
     alt: 'FIRENOX bottle directed toward the base of a small fire in a training tray',
   },
   {
     title: 'Press',
     copy: 'Press and hold the lever to release the spray.',
-    image: '/how-to-use/press.webp',
+    image: pressImage,
     alt: 'Close-up of the FIRENOX spray head being operated with spray leaving the nozzle',
   },
   {
     title: 'Sweep',
     copy: 'Sweep from side to side across the base of the fire.',
-    image: '/how-to-use/sweep.webp',
+    image: sweepImage,
     alt: 'FIRENOX spray directed across the base of a small contained training fire',
   },
 ]
@@ -59,6 +63,9 @@ export function HowToUse() {
                       src={step.image}
                       alt={step.alt}
                       fill
+                      placeholder="blur"
+                      loading="eager"
+                      fetchPriority="low"
                       sizes="(max-width: 639px) calc(100vw - 32px), (max-width: 1023px) 50vw, 305px"
                       className="object-contain transition-transform duration-700 motion-safe:group-hover:scale-[1.025]"
                     />

@@ -955,6 +955,30 @@
 .product-bottle__stage { width: 100%; height: 100%; min-width: 0; overflow: hidden; cursor: grab; }
 .product-bottle__stage:active { cursor: grabbing; }
 .product-bottle__canvas { display: block; width: 100%; max-width: 100%; height: 100%; }
+.product-bottle__loading {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: var(--muted-foreground);
+  font-size: 12px;
+  text-transform: uppercase;
+}
+.product-bottle__spinner {
+  width: 28px;
+  height: 28px;
+  border: 2px solid rgb(255 255 255 / 15%);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: bottle-loading 900ms linear infinite;
+}
+@keyframes bottle-loading { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .product-bottle__spinner { animation: none; }
+}
 
 .highlights-grid {
   display: grid;

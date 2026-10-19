@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
+import actionImage from '@/public/firenox-action-new.png'
 import {
   Droplet,
   Leaf,
@@ -92,9 +93,10 @@ export function About() {
             aria-label="Play FIRENOX in action video"
           >
             <Image
-              src="/firenox-action-new.png"
+              src={actionImage}
               alt="A hand spraying FIRENOX onto flames"
               fill
+              placeholder="blur"
               loading="eager"
               sizes="(max-width: 1024px) 100vw, 50vw"
               className="object-cover transition-transform duration-700 group-hover:scale-105"

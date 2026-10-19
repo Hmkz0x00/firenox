@@ -1,15 +1,22 @@
 import Image from 'next/image'
 import { Home, Briefcase, Car, ChefHat, Tent, Factory, Anchor } from 'lucide-react'
 import { Reveal } from '@/components/reveal'
+import homeImage from '@/public/use-cases/home-v2.webp'
+import officeImage from '@/public/use-cases/office-v2.webp'
+import carImage from '@/public/use-cases/car-v2.webp'
+import kitchenImage from '@/public/use-cases/kitchen-v2.webp'
+import outdoorImage from '@/public/use-cases/outdoor-v2.webp'
+import marineImage from '@/public/use-cases/marine-v2.webp'
+import industrialImage from '@/public/use-cases/industrial-v2.webp'
 
 const CASES = [
-  { icon: Home, label: 'Home', img: '/use-cases/home-v2.webp', alt: 'Contemporary family home with warmly lit windows at dusk', position: '50% 48%' },
-  { icon: Briefcase, label: 'Office', img: '/use-cases/office-v2.webp', alt: 'Bright modern office with desks and glass meeting rooms', position: '50% 50%' },
-  { icon: Car, label: 'Car', img: '/use-cases/car-v2.webp', alt: 'Graphite sedan parked beside a sunny coastal road', position: '50% 65%' },
-  { icon: ChefHat, label: 'Kitchen', img: '/use-cases/kitchen-v2.webp', alt: 'Woman preparing dinner in a bright home kitchen', position: '50% 10%' },
-  { icon: Tent, label: 'Camping', img: '/use-cases/outdoor-v2.webp', alt: 'View through an orange tent toward an alpine lake and forest', position: '50% 45%' },
-  { icon: Anchor, label: 'Marine', img: '/use-cases/marine-v2.webp', alt: 'White motor yacht moored in clear turquoise coastal water', position: '50% 62%' },
-  { icon: Factory, label: 'Industrial', img: '/use-cases/industrial-v2.webp', alt: 'Clean manufacturing workshop with production machines and marked aisles', position: '50% 50%' },
+  { icon: Home, label: 'Home', img: homeImage, alt: 'Contemporary family home with warmly lit windows at dusk', position: '50% 48%' },
+  { icon: Briefcase, label: 'Office', img: officeImage, alt: 'Bright modern office with desks and glass meeting rooms', position: '50% 50%' },
+  { icon: Car, label: 'Car', img: carImage, alt: 'Graphite sedan parked beside a sunny coastal road', position: '50% 65%' },
+  { icon: ChefHat, label: 'Kitchen', img: kitchenImage, alt: 'Woman preparing dinner in a bright home kitchen', position: '50% 10%' },
+  { icon: Tent, label: 'Camping', img: outdoorImage, alt: 'View through an orange tent toward an alpine lake and forest', position: '50% 45%' },
+  { icon: Anchor, label: 'Marine', img: marineImage, alt: 'White motor yacht moored in clear turquoise coastal water', position: '50% 62%' },
+  { icon: Factory, label: 'Industrial', img: industrialImage, alt: 'Clean manufacturing workshop with production machines and marked aisles', position: '50% 50%' },
 ]
 
 export function IdealFor() {
@@ -35,6 +42,9 @@ export function IdealFor() {
                   src={c.img}
                   alt={c.alt}
                   fill
+                  placeholder="blur"
+                  loading="eager"
+                  fetchPriority="low"
                   sizes="(max-width: 639px) calc(100vw - 32px), (max-width: 767px) 50vw, (max-width: 1023px) 33vw, (max-width: 1279px) 14vw, 174px"
                   style={{ objectPosition: c.position }}
                   className="object-cover transition-transform duration-700 motion-safe:group-hover:scale-105"
