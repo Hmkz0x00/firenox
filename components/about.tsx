@@ -54,11 +54,10 @@ export function About() {
       if (event.key === 'Escape') setOpen(false)
     }
     window.addEventListener('keydown', onKeyDown)
-    return () => window.removeEventListener('keydown', onKeyDown)
-  }, [open])
-
-  useEffect(() => {
-    if (!open) triggerRef.current?.focus()
+    return () => {
+      window.removeEventListener('keydown', onKeyDown)
+      triggerRef.current?.focus({ preventScroll: true })
+    }
   }, [open])
 
   return (
@@ -81,18 +80,6 @@ export function About() {
             teams one practical option to keep close.
           </p>
 
-          <ul className="mt-8 grid grid-cols-2 gap-x-6 gap-y-5 sm:grid-cols-3">
-            {CHIPS.map((chip) => (
-              <li key={chip.label} className="flex flex-col items-center text-center">
-                <span className="grid size-12 place-items-center rounded-full border border-primary/40 bg-primary/10 text-primary">
-                  <chip.icon aria-hidden="true" className="size-5" />
-                </span>
-                <span className="mt-2 text-[10px] font-semibold uppercase leading-tight tracking-wide text-muted-foreground">
-                  {chip.label}
-                </span>
-              </li>
-            ))}
-          </ul>
         </Reveal>
 
         {/* Right: video */}
@@ -122,6 +109,21 @@ export function About() {
           </p>
         </Reveal>
       </div>
+
+      <section id="product-highlights" aria-labelledby="highlights-title" className="product-highlights mx-auto mt-16 max-w-7xl scroll-mt-24">
+        <div className="relative flex min-h-11 items-center justify-between">
+          <h3 id="highlights-title" className="font-display text-2xl font-semibold uppercase md:text-3xl">Product <span className="text-primary">Highlights</span></h3>
+        </div>
+        <div className="section-rule mt-3" />
+        <ul className="highlights-grid mt-7">
+          {CHIPS.map((chip, index) => (
+            <Reveal key={chip.label} as="li" className="highlight-item" delay={index * 200} once={false}>
+              <chip.icon aria-hidden="true" className="highlight-icon" strokeWidth={1.6} />
+              <span className="font-display text-sm font-semibold uppercase leading-snug text-foreground">{chip.label}</span>
+            </Reveal>
+          ))}
+        </ul>
+      </section>
 
       <div id="proof" className="mx-auto mt-16 max-w-7xl scroll-mt-24">
         <Reveal>

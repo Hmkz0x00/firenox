@@ -7,11 +7,13 @@ export function Reveal({
   children,
   className,
   delay = 0,
+  once = true,
   as: Tag = 'div',
 }: {
   children: ReactNode
   className?: string
   delay?: number
+  once?: boolean
   as?: 'div' | 'section' | 'li' | 'span'
 }) {
   const ref = useRef<HTMLElement>(null)
@@ -24,14 +26,16 @@ export function Reveal({
       ([entry]) => {
         if (entry.isIntersecting) {
           setVisible(true)
-          observer.unobserve(entry.target)
+          if (once) observer.unobserve(entry.target)
+        } else if (!once) {
+          setVisible(false)
         }
       },
       { threshold: 0.15, rootMargin: '0px 0px -60px 0px' },
     )
     observer.observe(el)
     return () => observer.disconnect()
-  }, [])
+  }, [once])
 
   const Component = Tag as 'div'
 

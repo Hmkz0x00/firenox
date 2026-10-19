@@ -36,7 +36,9 @@ export function SiteFooter() {
             </li>
             <li className="flex items-center gap-2.5">
               <Mail aria-hidden="true" className="size-4 text-primary" />
-              sales@firenox.example
+              <a href="mailto:info@firenoxglobal.com" className="hover:text-foreground hover:underline">
+                info@firenoxglobal.com
+              </a>
             </li>
             <li className="flex items-center gap-2.5">
               <MapPin aria-hidden="true" className="size-4 text-primary" />

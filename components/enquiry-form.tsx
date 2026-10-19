@@ -5,26 +5,10 @@ import type { ReactNode } from 'react'
 import { CheckCircle2, Mail, Phone, Send, UserRound } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { Reveal } from '@/components/reveal'
+import { INTERESTS, validateEnquiry, type Enquiry, type EnquiryErrors } from '@/lib/enquiry'
 import { cn } from '@/lib/utils'
 
-const INTERESTS = [
-  'Home / vehicle use',
-  'Office / retail use',
-  'Industrial supply',
-  'Distribution enquiry',
-]
-
-type FormState = {
-  name: string
-  email: string
-  phone: string
-  interest: string
-  message: string
-}
-
-type Errors = Partial<Record<keyof FormState, string>>
-
-const INITIAL_FORM: FormState = {
+const INITIAL_FORM: Enquiry = {
   name: '',
   email: '',
   phone: '',
@@ -32,65 +16,61 @@ const INITIAL_FORM: FormState = {
   message: '',
 }
 
-function validate(values: FormState) {
-  const errors: Errors = {}
-
-  if (values.name.trim().length < 2) {
-    errors.name = 'Enter your name so the team knows who to contact.'
-  }
-
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email.trim())) {
-    errors.email = 'Enter an email address with an @ and a domain.'
-  }
-
-  const digits = values.phone.replace(/\D/g, '')
-  if (digits.length < 7) {
-    errors.phone = 'Enter a reachable phone number, including area code if needed.'
-  }
-
-  if (values.message.trim().length < 12) {
-    errors.message = 'Add a short note about quantity, location, or intended use.'
-  }
-
-  return errors
-}
-
 export function EnquiryForm() {
-  const [values, setValues] = useState<FormState>(INITIAL_FORM)
-  const [touched, setTouched] = useState<Errors>({})
+  const [values, setValues] = useState<Enquiry>(INITIAL_FORM)
+  const [touched, setTouched] = useState<EnquiryErrors>({})
   const [submitted, setSubmitted] = useState(false)
   const [submitting, setSubmitting] = useState(false)
-  const errors = useMemo(() => validate(values), [values])
+  const [serverError, setServerError] = useState('')
+  const errors = useMemo(() => validateEnquiry(values), [values])
 
-  const setField = (field: keyof FormState, value: string) => {
+  const setField = (field: keyof Enquiry, value: string) => {
     setSubmitted(false)
+    setServerError('')
     setValues((current) => ({ ...current, [field]: value }))
   }
 
-  const onSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    const nextErrors = validate(values)
+    if (submitting) return
+    const website = new FormData(event.currentTarget).get('website')
+    const nextErrors = validateEnquiry(values)
     setTouched({
       name: nextErrors.name ?? 'ok',
       email: nextErrors.email ?? 'ok',
       phone: nextErrors.phone ?? 'ok',
+      interest: nextErrors.interest ?? 'ok',
       message: nextErrors.message ?? 'ok',
     })
 
     if (Object.keys(nextErrors).length > 0) {
-      const firstInvalid = event.currentTarget.querySelector<HTMLElement>('[aria-invalid="true"]')
-      firstInvalid?.focus()
+      const firstField = Object.keys(nextErrors)[0]
+      document.getElementById(firstField)?.focus()
       return
     }
 
     setSubmitting(true)
-    window.setTimeout(() => {
-      setSubmitting(false)
+    setServerError('')
+    try {
+      const response = await fetch('/api/enquiry', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...values, website }),
+      })
+      const result: { ok?: boolean; error?: string } = await response.json()
+      if (!response.ok || !result.ok) {
+        setServerError(result.error || 'We could not send your enquiry. Please try again.')
+        return
+      }
       setSubmitted(true)
-    }, 500)
+    } catch {
+      setServerError('We could not reach the email service. Please try again.')
+    } finally {
+      setSubmitting(false)
+    }
   }
 
-  const showError = (field: keyof FormState) => touched[field] && errors[field]
+  const showError = (field: keyof Enquiry) => touched[field] && errors[field]
 
   return (
     <section id="contact" className="scroll-mt-24 px-4 py-16 md:px-8">
@@ -109,7 +89,9 @@ export function EnquiryForm() {
           <div className="mt-8 grid gap-3 text-sm text-muted-foreground">
             <p className="flex items-center gap-3">
               <Mail aria-hidden="true" className="size-5 text-primary" />
-              sales@firenox.example
+              <a href="mailto:info@firenoxglobal.com" className="hover:text-foreground hover:underline">
+                info@firenoxglobal.com
+              </a>
             </p>
             <p className="flex items-center gap-3">
               <Phone aria-hidden="true" className="size-5 text-primary" />
@@ -120,12 +102,23 @@ export function EnquiryForm() {
 
         <Reveal delay={120}>
           <form noValidate onSubmit={onSubmit} className="grid gap-5" aria-describedby="form-status">
+            <div className="absolute -left-[10000px]" aria-hidden="true">
+              <label htmlFor="website">Leave blank</label>
+              <input id="website" name="website" tabIndex={-1} autoComplete="off" />
+            </div>
             <div id="form-status" aria-live="polite" className="min-h-6 text-sm">
               {submitted && (
                 <p className="flex items-center gap-2 rounded-md border border-primary/40 bg-primary/10 p-3 font-medium text-foreground">
                   <CheckCircle2 aria-hidden="true" className="size-5 text-primary" />
-                  Enquiry prepared. Connect this form to your CRM or email service
-                  to send it live.
+                  Enquiry sent. We will reply to your email soon.
+                </p>
+              )}
+              {serverError && (
+                <p className="rounded-md border border-red-500/40 bg-red-500/10 p-3 text-red-100">
+                  {serverError}{' '}
+                  <a href="mailto:info@firenoxglobal.com" className="font-semibold underline">
+                    Email us directly
+                  </a>
                 </p>
               )}
             </div>
@@ -204,12 +197,17 @@ export function EnquiryForm() {
                   name="interest"
                   value={values.interest}
                   onChange={(event) => setField('interest', event.target.value)}
+                  aria-invalid={Boolean(showError('interest'))}
+                  aria-describedby="interest-error"
                   className="field-input"
                 >
                   {INTERESTS.map((interest) => (
                     <option key={interest}>{interest}</option>
                   ))}
                 </select>
+                <p id="interest-error" className="min-h-5 text-xs text-red-200">
+                  {showError('interest') || ''}
+                </p>
               </div>
             </div>
 
@@ -238,7 +236,7 @@ export function EnquiryForm() {
               className="control-ring inline-flex items-center justify-center gap-2 rounded-md bg-primary px-6 py-3 text-sm font-bold uppercase tracking-wide text-primary-foreground hover:brightness-110"
             >
               <Send aria-hidden="true" className="size-4" />
-              {submitting ? 'Preparing enquiry' : 'Prepare enquiry'}
+              {submitting ? 'Sending enquiry' : 'Send enquiry'}
             </button>
           </form>
         </Reveal>

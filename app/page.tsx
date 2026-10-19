@@ -3,6 +3,7 @@ import { Hero } from '@/components/hero'
 import { WhyChoose } from '@/components/why-choose'
 import { IdealFor } from '@/components/ideal-for'
 import { About } from '@/components/about'
+import { HowToUse } from '@/components/how-to-use'
 import { ProductGuide } from '@/components/product-guide'
 import { Comparison } from '@/components/comparison'
 import { Certifications } from '@/components/certifications'
@@ -17,6 +18,7 @@ export default function Page() {
       <WhyChoose />
       <IdealFor />
       <About />
+      <HowToUse />
       <ProductGuide />
       <Comparison />
       <Certifications />
