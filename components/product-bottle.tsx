@@ -1,6 +1,9 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import Image from 'next/image'
+import { Rotate3d } from 'lucide-react'
+import bottlePoster from '@/public/images/firenox-bottle.webp'
 
 type Viewer = { playing: boolean; rotate: (delta: number) => void; reset: () => void }
 
@@ -8,8 +11,29 @@ export function ProductBottle() {
   const stageRef = useRef<HTMLDivElement>(null)
   const [ready, setReady] = useState(false)
   const [failed, setFailed] = useState(false)
+  // The WebGL viewer (three.js, ~380 KB + shader warm-up) is deferred so it never competes with
+  // first paint. A pixel-matched static render of the same model is shown until then.
+  const [active, setActive] = useState(false)
+  const [manual, setManual] = useState(false)
 
   useEffect(() => {
+    if (active) return
+    const connection = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection
+    const finePointer = window.matchMedia('(pointer: fine)').matches
+    if (!finePointer || connection?.saveData) {
+      // Touch / data-saver: load only when the visitor asks for the 3D view.
+      setManual(true)
+      return
+    }
+    // Desktop: upgrade on the first sign of intent (mouse move, key, scroll).
+    const events = ['pointermove', 'pointerdown', 'keydown', 'wheel', 'scroll'] as const
+    const go = () => setActive(true)
+    events.forEach((name) => window.addEventListener(name, go, { once: true, passive: true }))
+    return () => events.forEach((name) => window.removeEventListener(name, go))
+  }, [active])
+
+  useEffect(() => {
+    if (!active) return
     let disposed = false
     let cleanup = () => {}
     const host = stageRef.current
@@ -162,6 +186,8 @@ export function ProductBottle() {
       resizer.observe(host)
       resize()
       setReady(true)
+      // Visitor explicitly asked for 3D (button press): hand keyboard focus to the viewer.
+      if (manual) canvas.focus({ preventScroll: true })
 
       function animate(time: number) {
         if (disposed) return
@@ -205,18 +231,33 @@ export function ProductBottle() {
       if (!disposed) { setFailed(true); setReady(false) }
     })
     return () => { disposed = true; cleanup() }
-  }, [])
+  }, [active, manual])
 
   return (
     <div className="product-bottle" data-ready={ready} data-mode="3d">
-      <div className="product-turntable__stage product-bottle__stage" ref={stageRef}>
-        {!ready && !failed && (
+      <div className="product-bottle__stage" ref={stageRef}>
+        {/* If WebGL fails, this render simply stays in place: no error state for the visitor. */}
+        <Image
+          src={bottlePoster}
+          alt={ready ? '' : 'FIRENOX fire spray bottle with red flame artwork'}
+          aria-hidden={ready || undefined}
+          loading="eager"
+          fetchPriority="high"
+          sizes="(min-width: 1200px) 152px, (min-width: 768px) 133px, 114px"
+          className="product-bottle__poster"
+        />
+        {manual && !active && (
+          <button type="button" className="product-bottle__hint" onClick={() => setActive(true)}>
+            <Rotate3d aria-hidden="true" className="size-4" />
+            Rotate in 3D
+          </button>
+        )}
+        {active && !ready && !failed && (
           <div className="product-bottle__loading" role="status">
             <span className="product-bottle__spinner" aria-hidden="true" />
-            <span>Loading 3D bottle</span>
+            <span>Loading 3D view</span>
           </div>
         )}
-        {failed && <p className="product-bottle__loading" role="status">3D product view unavailable</p>}
       </div>
     </div>
   )

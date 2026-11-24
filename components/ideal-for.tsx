@@ -1,65 +1,151 @@
 import Image from 'next/image'
 import { Home, Briefcase, Car, ChefHat, Tent, Factory, Anchor } from 'lucide-react'
 import { Reveal } from '@/components/reveal'
-import homeImage from '@/public/use-cases/home-v2.webp'
-import officeImage from '@/public/use-cases/office-v2.webp'
-import carImage from '@/public/use-cases/car-v2.webp'
-import kitchenImage from '@/public/use-cases/kitchen-v2.webp'
-import outdoorImage from '@/public/use-cases/outdoor-v2.webp'
-import marineImage from '@/public/use-cases/marine-v2.webp'
-import industrialImage from '@/public/use-cases/industrial-v2.webp'
+import { cn } from '@/lib/utils'
+import homeImage from '@/public/use-cases/home-firenox.webp'
+import officeImage from '@/public/use-cases/office-firenox.webp'
+import carImage from '@/public/use-cases/car-firenox.webp'
+import kitchenImage from '@/public/use-cases/kitchen-firenox.webp'
+import outdoorImage from '@/public/use-cases/outdoor-firenox.webp'
+import marineImage from '@/public/use-cases/marine-firenox.webp'
+import industrialImage from '@/public/use-cases/industrial-firenox.webp'
 
+/*
+ * Bento layout (lg, 4 columns):   [ Home  Home ][Office][ Car ]
+ *                                 [ Home  Home ][Kitchen][Camp]
+ *                                 [ Marine Mar ][ Industrial  ]
+ * Tablet/mobile: Home is a full-width banner, the rest pair up 2-by-2.
+ */
 const CASES = [
-  { icon: Home, label: 'Home', img: homeImage, alt: 'Contemporary family home with warmly lit windows at dusk', position: '50% 48%' },
-  { icon: Briefcase, label: 'Office', img: officeImage, alt: 'Bright modern office with desks and glass meeting rooms', position: '50% 50%' },
-  { icon: Car, label: 'Car', img: carImage, alt: 'Graphite sedan parked beside a sunny coastal road', position: '50% 65%' },
-  { icon: ChefHat, label: 'Kitchen', img: kitchenImage, alt: 'Woman preparing dinner in a bright home kitchen', position: '50% 10%' },
-  { icon: Tent, label: 'Camping', img: outdoorImage, alt: 'View through an orange tent toward an alpine lake and forest', position: '50% 45%' },
-  { icon: Anchor, label: 'Marine', img: marineImage, alt: 'White motor yacht moored in clear turquoise coastal water', position: '50% 62%' },
-  { icon: Factory, label: 'Industrial', img: industrialImage, alt: 'Clean manufacturing workshop with production machines and marked aisles', position: '50% 50%' },
+  {
+    icon: Home,
+    label: 'Home',
+    caption: 'By the front door, where everyone can find it',
+    img: homeImage,
+    alt: 'FIRENOX fire spray standing on an oak console table in a warmly lit family hallway',
+    position: '50% 58%',
+    span: 'col-span-2 lg:row-span-2',
+    frame: 'aspect-[2/1] lg:aspect-auto lg:h-full',
+    sizes: '(max-width: 1023px) 100vw, 600px',
+  },
+  {
+    icon: Briefcase,
+    label: 'Office',
+    caption: 'On the desk, not locked in a cupboard',
+    img: officeImage,
+    alt: 'FIRENOX fire spray on a white office desk beside a laptop and coffee cup',
+    position: '60% 60%',
+    span: '',
+    frame: 'aspect-square',
+    sizes: '(max-width: 1023px) 50vw, 300px',
+  },
+  {
+    icon: Car,
+    label: 'Car',
+    caption: 'Secured in the boot for the road',
+    img: carImage,
+    alt: 'FIRENOX fire spray in the open boot of an SUV parked on a coastal road',
+    position: '55% 62%',
+    span: '',
+    frame: 'aspect-square',
+    sizes: '(max-width: 1023px) 50vw, 300px',
+  },
+  {
+    icon: ChefHat,
+    label: 'Kitchen',
+    caption: 'Within reach of the hob',
+    img: kitchenImage,
+    alt: 'FIRENOX fire spray on a stone kitchen worktop beside a gas hob',
+    position: '62% 70%',
+    span: '',
+    frame: 'aspect-square',
+    sizes: '(max-width: 1023px) 50vw, 300px',
+  },
+  {
+    icon: Tent,
+    label: 'Camping',
+    caption: 'Next to the lantern at camp',
+    img: outdoorImage,
+    alt: 'FIRENOX fire spray on a wooden camp table beside a lantern at dusk, tent and campfire behind',
+    position: '62% 65%',
+    span: '',
+    frame: 'aspect-square',
+    sizes: '(max-width: 1023px) 50vw, 300px',
+  },
+  {
+    icon: Anchor,
+    label: 'Marine',
+    caption: 'At the helm, on every trip',
+    img: marineImage,
+    alt: 'FIRENOX fire spray on the console of a motor yacht with turquoise sea beyond',
+    position: '60% 55%',
+    span: 'lg:col-span-2',
+    frame: 'aspect-square lg:aspect-[2/1]',
+    sizes: '(max-width: 1023px) 50vw, 600px',
+  },
+  {
+    icon: Factory,
+    label: 'Industrial',
+    caption: 'On the bench, at every workstation',
+    img: industrialImage,
+    alt: 'FIRENOX fire spray on a steel workbench in a clean manufacturing workshop',
+    position: '70% 52%',
+    span: 'lg:col-span-2',
+    frame: 'aspect-square lg:aspect-[2/1]',
+    sizes: '(max-width: 1023px) 50vw, 600px',
+  },
 ]
 
 export function IdealFor() {
   return (
-    <section id="use-cases" className="scroll-mt-24 px-4 py-14 md:px-8">
+    <section id="use-cases" aria-labelledby="use-cases-title" className="scroll-mt-24 px-4 py-16 md:px-8">
       <div className="mx-auto max-w-7xl">
         <Reveal>
-          <h2 className="font-display text-2xl font-bold uppercase tracking-wide md:text-3xl">
-            Built For The Places Fires Actually Start
-          </h2>
-          <div className="mt-3 section-rule" />
-          <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-            FIRENOX is useful only if it is nearby. These are the everyday
-            locations where a compact first-response spray earns its place.
-          </p>
+          <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+            <div>
+              <p className="font-display text-sm font-semibold uppercase tracking-[0.2em] text-primary">Where to keep it</p>
+              <h2 id="use-cases-title" className="mt-3 text-balance font-display text-3xl font-bold uppercase leading-tight md:text-5xl">
+                Built for the places fires <span className="text-primary">actually start</span>
+              </h2>
+              <div className="mt-4 section-rule" />
+            </div>
+            <p className="max-w-md text-sm leading-relaxed text-muted-foreground">
+              FIRENOX only helps if it is within reach. Keep one wherever a small flame can start,
+              so the first response takes seconds, not a search.
+            </p>
+          </div>
         </Reveal>
 
-        <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-7">
+        <ul className="mt-10 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
           {CASES.map((c, i) => (
-            <Reveal key={c.label} delay={i * 70}>
-              <div className="use-case-photo group relative aspect-[4/3] overflow-hidden rounded-lg border border-white/10 sm:aspect-square">
+            <Reveal key={c.label} as="li" delay={i * 60} className={cn('min-w-0', c.span)}>
+              <figure className={cn('use-case-tile group relative overflow-hidden rounded-xl border border-white/10 bg-card', c.frame)}>
                 <Image
                   src={c.img}
                   alt={c.alt}
                   fill
                   placeholder="blur"
-                  loading="eager"
-                  fetchPriority="low"
-                  sizes="(max-width: 639px) calc(100vw - 32px), (max-width: 767px) 50vw, (max-width: 1023px) 33vw, (max-width: 1279px) 14vw, 174px"
+                  quality={75}
+                  sizes={c.sizes}
                   style={{ objectPosition: c.position }}
-                  className="object-cover transition-transform duration-700 motion-safe:group-hover:scale-105"
+                  className="object-cover transition-transform duration-700 ease-out motion-safe:group-hover:scale-[1.04]"
                 />
-                <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/90 via-black/35 to-transparent" />
-                <div className="absolute inset-x-0 bottom-0 flex items-center gap-2 p-3">
-                  <c.icon aria-hidden="true" className="size-5 shrink-0 text-primary" />
-                  <span className="font-display text-sm font-semibold uppercase tracking-wide">
-                    {c.label}
+                <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
+                <figcaption className="absolute inset-x-0 bottom-0 p-3 sm:p-5">
+                  <span className="flex items-center gap-2">
+                    <span className="grid size-8 shrink-0 place-items-center rounded-full bg-black/45 ring-1 ring-white/15 backdrop-blur-sm">
+                      <c.icon aria-hidden="true" className="size-4 text-primary" />
+                    </span>
+                    <span className="font-display text-base font-semibold uppercase tracking-wide sm:text-lg">{c.label}</span>
                   </span>
-                </div>
-              </div>
+                  <span className={cn('mt-1.5 block text-xs leading-snug text-white/80 sm:text-sm', i === 0 ? 'block' : 'hidden sm:block')}>
+                    {c.caption}
+                  </span>
+                </figcaption>
+              </figure>
             </Reveal>
           ))}
-        </div>
+        </ul>
       </div>
     </section>
   )

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
-import actionImage from '@/public/firenox-action-new.png'
+import actionImage from '@/public/images/firenox-in-action.webp'
 import {
   Droplet,
   Leaf,
@@ -55,7 +55,11 @@ export function About() {
       if (event.key === 'Escape') setOpen(false)
     }
     window.addEventListener('keydown', onKeyDown)
+    // Stop the page scrolling behind the modal.
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
     return () => {
+      document.body.style.overflow = previousOverflow
       window.removeEventListener('keydown', onKeyDown)
       triggerRef.current?.focus({ preventScroll: true })
     }
@@ -66,7 +70,8 @@ export function About() {
       <div className="mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-2">
         {/* Left: copy */}
         <Reveal>
-          <h2 className="font-display text-3xl font-bold uppercase tracking-wide md:text-4xl">
+          <p className="font-display text-sm font-semibold uppercase tracking-[0.2em] text-primary">The product</p>
+          <h2 className="mt-3 font-display text-3xl font-bold uppercase tracking-wide md:text-5xl">
             About <span className="text-primary">FIRENOX</span>
           </h2>
           <div className="mt-3 section-rule" />
@@ -94,16 +99,15 @@ export function About() {
           >
             <Image
               src={actionImage}
-              alt="A hand spraying FIRENOX onto flames"
+              alt="A gloved hand spraying FIRENOX onto a workshop fire"
               fill
               placeholder="blur"
-              loading="eager"
               sizes="(max-width: 1024px) 100vw, 50vw"
-              className="object-cover transition-transform duration-700 group-hover:scale-105"
+              className="object-cover transition-transform duration-700 motion-safe:group-hover:scale-105"
             />
             <span className="absolute inset-0 bg-black/20" />
-            <span className="absolute left-1/2 top-1/2 grid size-16 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-primary/90 fire-glow transition-transform group-hover:scale-110">
-              <Play aria-hidden="true" className="size-7 text-primary-foreground" fill="currentColor" />
+            <span className="absolute left-1/2 top-1/2 grid size-16 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-cta fire-glow transition-transform motion-safe:group-hover:scale-110">
+              <Play aria-hidden="true" className="size-7 text-cta-foreground" fill="currentColor" />
             </span>
           </button>
           <p className="mt-4 text-center font-display text-lg font-semibold uppercase tracking-wide">
@@ -119,7 +123,7 @@ export function About() {
         <div className="section-rule mt-3" />
         <ul className="highlights-grid mt-7">
           {CHIPS.map((chip, index) => (
-            <Reveal key={chip.label} as="li" className="highlight-item" delay={index * 200} once={false}>
+            <Reveal key={chip.label} as="li" className="highlight-item" delay={index * 80}>
               <chip.icon aria-hidden="true" className="highlight-icon" strokeWidth={1.6} />
               <span className="font-display text-sm font-semibold uppercase leading-snug text-foreground">{chip.label}</span>
             </Reveal>
@@ -172,21 +176,25 @@ export function About() {
           >
             <X aria-hidden="true" className="size-5" />
           </button>
+          {/* The demo clip is portrait (9:16): size the frame to the viewport height, not a 16:9 box. */}
           <div
-            className="relative w-full max-w-4xl overflow-hidden rounded-lg border border-white/10 bg-black"
+            className="relative aspect-[9/16] h-[min(85dvh,calc((100vw-2rem)*16/9))] overflow-hidden rounded-lg border border-white/10 bg-black"
             onClick={(e) => e.stopPropagation()}
           >
             <h2 id="demo-title" className="sr-only">
               FIRENOX product demonstration
             </h2>
             <video
-              className="aspect-video w-full"
-              src="/firenox-hero-new.mp4"
+              className="size-full object-contain"
+              src="/videos/firenox-demo.mp4"
+              width={720}
+              height={1280}
               controls
               autoPlay
               muted
               playsInline
-              poster="/firenox-action-new.png"
+              preload="auto"
+              poster="/videos/firenox-demo-poster.webp"
             />
           </div>
         </div>

@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import { Mail, MapPin, FileText, ChevronRight, ShieldCheck } from 'lucide-react'
+import logoMark from '@/public/brand/firenox-mark.webp'
 
 export function SiteFooter() {
   return (
@@ -7,15 +8,7 @@ export function SiteFooter() {
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 md:grid-cols-[1fr_1.2fr_auto] md:items-center md:px-8">
         <div className="flex items-center gap-2.5">
           <span className="grid size-9 place-items-center overflow-hidden rounded-md border border-white/10 bg-black">
-            <Image
-              src="/firenox-fire-logo.png"
-              alt="FIRENOX fire mark"
-              width={36}
-              height={36}
-              loading="eager"
-              fetchPriority="low"
-              className="size-full object-cover"
-            />
+            <Image src={logoMark} alt="" width={36} height={36} className="size-full object-cover" />
           </span>
           <span className="leading-none">
             <span className="block font-display text-xl font-bold tracking-tight">
@@ -59,7 +52,7 @@ export function SiteFooter() {
           </a>
           <a
             href="#contact"
-            className="control-ring group flex items-center justify-center gap-2 rounded-md bg-primary px-5 py-3 text-xs font-semibold uppercase tracking-wide text-primary-foreground hover:brightness-110"
+            className="control-ring group flex items-center justify-center gap-2 rounded-md bg-cta px-5 py-3 text-xs font-semibold uppercase tracking-wide text-cta-foreground hover:brightness-110"
           >
             Enquire Now
             <ChevronRight aria-hidden="true" className="size-4 transition-transform group-hover:translate-x-0.5" />

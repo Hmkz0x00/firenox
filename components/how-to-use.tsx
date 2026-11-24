@@ -64,17 +64,16 @@ export function HowToUse() {
                       alt={step.alt}
                       fill
                       placeholder="blur"
-                      loading="eager"
-                      fetchPriority="low"
+                      quality={70}
                       sizes="(max-width: 639px) calc(100vw - 32px), (max-width: 1023px) 50vw, 305px"
                       className="object-contain transition-transform duration-700 motion-safe:group-hover:scale-[1.025]"
                     />
-                    <span aria-hidden="true" className="absolute left-3 top-3 grid size-10 place-items-center rounded-md bg-primary font-display text-xl font-bold text-primary-foreground shadow-sm">
+                    <span aria-hidden="true" className="absolute left-3 top-3 grid size-10 place-items-center rounded-md bg-cta font-display text-xl font-bold text-cta-foreground shadow-sm">
                       {String(index + 1).padStart(2, '0')}
                     </span>
                   </div>
-                  <h3 className="mt-5 flex items-baseline gap-3 font-display text-2xl font-bold uppercase">
-                    <span className="text-sm text-primary">0{index + 1}<span className="sr-only">. </span></span>
+                  <h3 className="mt-5 font-display text-2xl font-bold uppercase">
+                    <span className="sr-only">Step {index + 1}: </span>
                     {step.title}
                   </h3>
                   <p className="mt-2 max-w-sm text-sm leading-relaxed text-muted-foreground">{step.copy}</p>
