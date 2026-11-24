@@ -52,7 +52,7 @@ export function ProductGuide() {
                   <span className="grid size-12 place-items-center rounded-md border border-primary/35 bg-primary/10 text-primary">
                     <item.icon aria-hidden="true" className="size-6" />
                   </span>
-                  <span className="font-display text-sm font-bold tracking-[0.18em] text-primary/70">
+                  <span aria-hidden="true" className="font-display text-sm font-bold tracking-[0.18em] text-muted-foreground">
                     {item.step}
                   </span>
                 </div>

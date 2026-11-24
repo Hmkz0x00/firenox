@@ -1,12 +1,17 @@
 'use client'
 
 import type { CSSProperties } from 'react'
+import Image from 'next/image'
 import {
+  Check,
   ChevronRight,
   Play,
   Gauge,
 } from 'lucide-react'
 import { ProductBottle } from '@/components/product-bottle'
+import heroBackdrop from '@/public/images/hero-backdrop.webp'
+
+const TRUST = ['Covers 7 fire classes', 'Water-based formula', 'No annual servicing']
 
 const FIRE_CLASSES = [
   {
@@ -62,8 +67,12 @@ const FIRE_CLASSES = [
 
 export function Hero() {
   return (
-    <section id="home" className="photo-hero relative pb-12 md:pb-18">
-      <div className="photo-hero__grid mx-auto max-w-7xl px-4 md:px-8">
+    <section id="home" className="photo-hero relative isolate overflow-hidden pb-12 md:pb-18">
+      {/* Decorative ember haze behind the product; fades into the page at the bottom. */}
+      <div aria-hidden="true" className="photo-hero__backdrop">
+        <Image src={heroBackdrop} alt="" fill sizes="100vw" fetchPriority="low" className="object-cover" />
+      </div>
+      <div className="photo-hero__grid relative mx-auto max-w-7xl px-4 md:px-8">
         {/* Left: copy */}
         <div className="photo-hero__copy relative z-10">
           <div className="photo-hero__intro">
@@ -86,12 +95,22 @@ export function Hero() {
             A compact, water-based spray built for the first critical moments:
             keep one close, act fast, and reduce panic before a small flame grows.
           </p>
+          <ul className="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-sm text-foreground/85">
+            {TRUST.map((item) => (
+              <li key={item} className="flex items-center gap-2">
+                <span className="grid size-5 place-items-center rounded-full bg-primary/15 ring-1 ring-primary/40">
+                  <Check aria-hidden="true" className="size-3 text-primary" strokeWidth={3} />
+                </span>
+                {item}
+              </li>
+            ))}
+          </ul>
           </div>
 
           <div className="photo-hero__actions mt-8 flex flex-wrap items-center gap-3">
             <a
               href="#contact"
-              className="control-ring hero-primary-cta group flex items-center gap-2 rounded-md bg-primary px-6 py-3 text-sm font-semibold tracking-wide text-primary-foreground hover:brightness-110"
+              className="control-ring hero-primary-cta group flex items-center gap-2 rounded-md bg-cta px-6 py-3 text-sm font-semibold tracking-wide text-cta-foreground hover:brightness-110"
             >
               GET A QUOTE
               <ChevronRight aria-hidden="true" className="size-4 transition-transform group-hover:translate-x-0.5" />
@@ -100,9 +119,9 @@ export function Hero() {
               href="#product"
               className="control-ring flex items-center gap-2.5 rounded-md border border-white/15 px-6 py-3 text-sm font-semibold tracking-wide text-foreground"
             >
-              SEE PRODUCT
-              <span className="grid size-6 place-items-center rounded-full bg-primary">
-                <Play aria-hidden="true" className="size-3 text-primary-foreground" fill="currentColor" />
+              WATCH DEMO
+              <span className="grid size-6 place-items-center rounded-full bg-cta">
+                <Play aria-hidden="true" className="size-3 text-cta-foreground" fill="currentColor" />
               </span>
             </a>
           </div>

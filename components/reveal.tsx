@@ -3,47 +3,53 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { cn } from '@/lib/utils'
 
+/**
+ * Fades content up as it scrolls into view.
+ *
+ * Progressive enhancement: the server renders content fully visible. After hydration, only
+ * elements that are still below the fold are hidden and then revealed, so above-the-fold
+ * content never flashes and LCP is never held back by an animation.
+ */
 export function Reveal({
   children,
   className,
   delay = 0,
-  once = true,
   as: Tag = 'div',
 }: {
   children: ReactNode
   className?: string
   delay?: number
-  once?: boolean
   as?: 'div' | 'section' | 'li' | 'span'
 }) {
   const ref = useRef<HTMLElement>(null)
-  const [visible, setVisible] = useState(false)
+  const [pending, setPending] = useState(false)
 
   useEffect(() => {
     const el = ref.current
-    if (!el) return
+    if (!el || typeof IntersectionObserver === 'undefined') return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    if (el.getBoundingClientRect().top < window.innerHeight) return
+
+    setPending(true)
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true)
-          if (once) observer.unobserve(entry.target)
-        } else if (!once) {
-          setVisible(false)
-        }
+        if (!entry.isIntersecting) return
+        setPending(false)
+        observer.disconnect()
       },
-      { threshold: 0.15, rootMargin: '0px 0px -60px 0px' },
+      { rootMargin: '0px 0px -8% 0px' },
     )
     observer.observe(el)
     return () => observer.disconnect()
-  }, [once])
+  }, [])
 
   const Component = Tag as 'div'
 
   return (
     <Component
       ref={ref as React.RefObject<HTMLDivElement>}
-      className={cn('reveal', visible && 'is-visible', className)}
-      style={{ transitionDelay: `${delay}ms` }}
+      className={cn('reveal', pending && 'is-pending', className)}
+      style={delay ? { transitionDelay: `${delay}ms` } : undefined}
     >
       {children}
     </Component>

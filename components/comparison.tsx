@@ -33,7 +33,7 @@ export function Comparison() {
         </Reveal>
 
         <Reveal delay={250}>
-          <div className="comparison-infographic mt-6" aria-label="HTML comparison infographic">
+          <div className="comparison-infographic mt-6" role="group" aria-label="Traditional extinguishers compared with FIRENOX fire spray">
             <div className="comparison-infographic__headline">
               <div className="comparison-infographic__side comparison-infographic__side--traditional">
                 <span className="comparison-infographic__side-title">Traditional</span>
@@ -72,7 +72,7 @@ export function Comparison() {
                 </tbody>
               </table>
             </div>
-            <div className="comparison-matrix-mobile" aria-label="Mobile comparison summary">
+            <div className="comparison-matrix-mobile">
               {visualFeatures.map((feature) => {
                 const Icon = feature.icon
                 const [emphasis, ...rest] = feature.right.split(' - ')
@@ -94,7 +94,7 @@ export function Comparison() {
               })}
             </div>
             <p className="comparison-infographic__note">
-              Visual summary rebuilt as native HTML. Confirm current certifications and claims for your market before purchase.
+              Comparison reflects typical portable powder extinguishers. Confirm current certifications and performance claims for your market before purchase.
             </p>
           </div>
         </Reveal>

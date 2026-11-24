@@ -233,7 +233,7 @@ export function EnquiryForm() {
               type="submit"
               disabled={submitting}
               aria-busy={submitting}
-              className="control-ring inline-flex items-center justify-center gap-2 rounded-md bg-primary px-6 py-3 text-sm font-bold uppercase tracking-wide text-primary-foreground hover:brightness-110"
+              className="control-ring inline-flex items-center justify-center gap-2 rounded-md bg-cta px-6 py-3 text-sm font-bold uppercase tracking-wide text-cta-foreground hover:brightness-110"
             >
               <Send aria-hidden="true" className="size-4" />
               {submitting ? 'Sending enquiry' : 'Send enquiry'}
